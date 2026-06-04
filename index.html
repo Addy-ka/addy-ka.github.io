@@ -1,335 +1,942 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Adhyan Kalsotra — Projects</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Adhyan Kalsotra — The Keep</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet" />
+<style>
+/* ============================================================
+   ADHYAN KALSOTRA — GOTHIC PIXEL PORTFOLIO
+   ------------------------------------------------------------
+   How to edit:
+   - Your bio / profile text:   search for  EDIT BIO
+   - Add more profile photos:   search for  ADD PHOTO
+   - Menu tagline beside photo: search for  EDIT TAGLINE
+   - Your links are in the project / profile sections.
+   ============================================================ */
 
-    :root {
-      --bg:       #0e0e0e;
-      --surface:  #161616;
-      --border:   #252525;
-      --text:     #e8e4dc;
-      --muted:    #6b6760;
-      --accent:   #d4a843;
-      --accent2:  #7c6aff;
-    }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 
-    html { scroll-behavior: smooth; }
+:root{
+  --black:#080406;
+  --stone-0:#0f0a0c;
+  --stone-1:#1a1014;
+  --stone-2:#241419;
+  --line:#3a1a1f;
+  --blood:#6e0b0b;
+  --blood-2:#a31515;
+  --ember:#e23b2e;
+  --ember-glow:#ff5a3c;
+  --bone:#e5dfca;
+  --bone-dim:#9a8f7a;
+  --gold:#c9a23f;
+}
 
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'DM Mono', monospace;
-      font-size: 14px;
-      line-height: 1.6;
-      min-height: 100vh;
-    }
+html{scroll-behavior:smooth;}
 
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 0;
-      opacity: 0.5;
-    }
+body{
+  background:var(--black);
+  color:var(--bone);
+  font-family:'VT323',monospace;
+  font-size:20px;
+  line-height:1.35;
+  min-height:100vh;
+  overflow-x:hidden;
+  position:relative;
+}
 
-    .wrap {
-      max-width: 860px;
-      margin: 0 auto;
-      padding: 0 24px;
-      position: relative;
-      z-index: 1;
-    }
+/* The animated castle scene fills the whole viewport behind everything */
+#scene{
+  position:fixed;
+  inset:0;
+  width:100vw;
+  height:100vh;
+  object-fit:cover;
+  image-rendering:pixelated;
+  image-rendering:crisp-edges;
+  z-index:0;
+}
 
-    header {
-      padding: 80px 0 60px;
-      border-bottom: 1px solid var(--border);
-    }
+/* Dark vignette + scanline atmosphere over the scene */
+#atmosphere{
+  position:fixed;
+  inset:0;
+  z-index:1;
+  pointer-events:none;
+  background:
+    radial-gradient(ellipse 120% 90% at 50% 38%, transparent 30%, rgba(8,4,6,0.55) 78%, rgba(8,4,6,0.92) 100%),
+    repeating-linear-gradient(0deg, rgba(0,0,0,0.18) 0px, rgba(0,0,0,0.18) 1px, transparent 1px, transparent 3px);
+}
 
-    .header-label {
-      font-family: 'DM Mono', monospace;
-      font-size: 11px;
-      letter-spacing: 0.2em;
-      color: var(--accent);
-      text-transform: uppercase;
-      margin-bottom: 20px;
-    }
+/* White/red lightning flash that punches the whole screen */
+#flash{
+  position:fixed;
+  inset:0;
+  z-index:2;
+  pointer-events:none;
+  opacity:0;
+  background:radial-gradient(circle at 50% 28%, rgba(255,235,230,0.9), rgba(226,59,46,0.35) 45%, transparent 70%);
+}
+#flash.hit{animation:flashHit 0.5s ease-out;}
+@keyframes flashHit{
+  0%{opacity:0;}
+  8%{opacity:0.95;}
+  20%{opacity:0.25;}
+  35%{opacity:0.7;}
+  100%{opacity:0;}
+}
 
-    h1 {
-      font-family: 'Syne', sans-serif;
-      font-size: clamp(2.4rem, 6vw, 4rem);
-      font-weight: 800;
-      line-height: 1.05;
-      letter-spacing: -0.02em;
-      color: var(--text);
-      margin-bottom: 16px;
-    }
+/* ---------- UI LAYER ---------- */
+.stage{
+  position:relative;
+  z-index:3;
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:32px 18px;
+}
 
-    h1 span { color: var(--accent); }
+.panel{
+  width:100%;
+  max-width:680px;
+  position:relative;
+}
 
-    .header-sub {
-      color: var(--muted);
-      font-size: 13px;
-      max-width: 460px;
-    }
+/* Gothic framed box, used everywhere */
+.frame{
+  position:relative;
+  background:
+    linear-gradient(180deg, rgba(18,10,14,0.50), rgba(8,4,6,0.62));
+  backdrop-filter:brightness(0.78) saturate(1.05);
+  -webkit-backdrop-filter:brightness(0.78) saturate(1.05);
+  border:3px solid var(--blood);
+  box-shadow:
+    0 0 0 2px var(--black),
+    0 0 0 5px #2a0c0c,
+    0 0 38px rgba(226,59,46,0.22),
+    inset 0 0 60px rgba(0,0,0,0.7);
+  padding:26px 26px 30px;
+}
+/* corner rivets */
+.frame::before,.frame::after{
+  content:'';
+  position:absolute;
+  width:8px;height:8px;
+  background:var(--gold);
+  box-shadow:0 0 6px rgba(201,162,63,0.8);
+}
+.frame::before{top:-5px;left:-5px;}
+.frame::after{top:-5px;right:-5px;}
+.frame .rivet-bl,.frame .rivet-br{
+  position:absolute;width:8px;height:8px;background:var(--gold);
+  box-shadow:0 0 6px rgba(201,162,63,0.8);
+}
+.frame .rivet-bl{bottom:-5px;left:-5px;}
+.frame .rivet-br{bottom:-5px;right:-5px;}
 
-    .section-header {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      padding: 48px 0 32px;
-    }
+/* ---------- VIEW SWITCHING ---------- */
+.view{display:none;}
+.view.active{display:block;animation:viewIn 0.45s ease both;}
+@keyframes viewIn{
+  from{opacity:0;transform:translateY(14px) scale(0.99);}
+  to{opacity:1;transform:none;}
+}
 
-    .section-header h2 {
-      font-family: 'Syne', sans-serif;
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
+/* ---------- HEADERS ---------- */
+.crest{
+  text-align:center;
+  margin-bottom:18px;
+}
+.crest .sigil{
+  font-family:'Press Start 2P',monospace;
+  font-size:13px;
+  color:var(--ember);
+  letter-spacing:2px;
+  text-shadow:0 0 10px rgba(226,59,46,0.6);
+}
+.title{
+  font-family:'Press Start 2P',monospace;
+  font-size:clamp(15px,4.4vw,26px);
+  color:var(--bone);
+  text-align:center;
+  line-height:1.5;
+  text-shadow:3px 3px 0 #2a0606, 0 0 18px rgba(226,59,46,0.35);
+  margin:6px 0 4px;
+}
+.subtitle{
+  text-align:center;
+  color:var(--bone-dim);
+  font-size:19px;
+  letter-spacing:1px;
+}
 
-    .section-header::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: var(--border);
-    }
+.divider{
+  height:2px;
+  margin:18px 0;
+  background:linear-gradient(90deg,transparent,var(--blood),var(--ember),var(--blood),transparent);
+  box-shadow:0 0 10px rgba(226,59,46,0.5);
+}
 
-    .projects {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 1px;
-      border: 1px solid var(--border);
-      background: var(--border);
-      margin-bottom: 80px;
-    }
+/* ---------- PROFILE STRIP (top of menu) ---------- */
+.profile-strip{
+  display:flex;
+  align-items:center;
+  gap:18px;
+  padding:14px;
+  border:2px solid var(--line);
+  background:rgba(0,0,0,0.35);
+  cursor:pointer;
+  transition:all 0.18s;
+  position:relative;
+}
+.profile-strip:hover{
+  border-color:var(--ember);
+  background:rgba(110,11,11,0.22);
+  box-shadow:0 0 24px rgba(226,59,46,0.28), inset 0 0 24px rgba(226,59,46,0.08);
+  transform:translateX(2px);
+}
+.portrait{
+  width:84px;height:84px;flex-shrink:0;
+  object-fit:cover;
+  border:3px solid var(--gold);
+  box-shadow:0 0 0 2px var(--black),0 0 16px rgba(226,59,46,0.4);
+  filter:contrast(1.05) saturate(0.92);
+}
+.profile-strip .pname{
+  font-family:'Cinzel',serif;
+  font-weight:700;
+  font-size:23px;
+  color:var(--bone);
+  letter-spacing:1px;
+}
+.profile-strip .ptag{
+  color:var(--ember-glow);
+  font-size:18px;
+  margin-top:2px;
+}
+.profile-strip .enter{
+  margin-top:6px;
+  font-family:'Press Start 2P',monospace;
+  font-size:8px;
+  color:var(--bone-dim);
+  letter-spacing:1px;
+}
+.profile-strip:hover .enter{color:var(--ember);}
 
-    .card {
-      background: var(--surface);
-      padding: 28px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      transition: background 0.15s;
-    }
+/* ---------- MENU LIST ---------- */
+.menu-label{
+  font-family:'Press Start 2P',monospace;
+  font-size:9px;
+  color:var(--bone-dim);
+  letter-spacing:2px;
+  margin:20px 0 12px;
+  text-align:center;
+}
+.menu-list{display:flex;flex-direction:column;gap:10px;}
 
-    .card:hover { background: #1c1c1c; }
+.menu-item{
+  display:flex;
+  align-items:center;
+  gap:16px;
+  padding:14px 16px;
+  border:2px solid var(--line);
+  background:rgba(0,0,0,0.32);
+  cursor:pointer;
+  transition:all 0.16s;
+  position:relative;
+  text-align:left;
+  color:inherit;
+  font-family:inherit;
+  width:100%;
+}
+.menu-item:hover,.menu-item:focus-visible{
+  border-color:var(--ember);
+  background:rgba(110,11,11,0.25);
+  box-shadow:0 0 22px rgba(226,59,46,0.3), inset 0 0 20px rgba(226,59,46,0.07);
+  transform:translateX(4px);
+  outline:none;
+}
+.menu-item .ico{
+  width:48px;height:48px;flex-shrink:0;
+  object-fit:contain;
+  image-rendering:auto;
+  border:2px solid var(--line);
+  background:#0a0608;
+  padding:3px;
+}
+.menu-item:hover .ico{border-color:var(--gold);}
+.menu-item .mtitle{
+  font-family:'Cinzel',serif;
+  font-weight:600;
+  font-size:22px;
+  color:var(--bone);
+  letter-spacing:1px;
+}
+.menu-item .mdesc{
+  font-size:17px;
+  color:var(--bone-dim);
+  margin-top:1px;
+}
+.menu-item .arrow{
+  margin-left:auto;
+  font-family:'Press Start 2P',monospace;
+  font-size:12px;
+  color:var(--ember);
+  opacity:0;
+  transform:translateX(-6px);
+  transition:all 0.16s;
+}
+.menu-item:hover .arrow{opacity:1;transform:translateX(0);}
+.badge{
+  font-family:'Press Start 2P',monospace;
+  font-size:7px;
+  letter-spacing:1px;
+  padding:4px 6px;
+  border:1px solid;
+  margin-left:auto;
+}
+.badge-live{color:#7be07b;border-color:#2f5c2f;background:rgba(20,50,20,0.4);}
 
-    .card-top {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 12px;
-    }
+/* ---------- DETAIL VIEWS ---------- */
+.back-btn{
+  font-family:'Press Start 2P',monospace;
+  font-size:10px;
+  color:var(--bone-dim);
+  background:rgba(0,0,0,0.4);
+  border:2px solid var(--line);
+  padding:9px 14px;
+  cursor:pointer;
+  letter-spacing:1px;
+  transition:all 0.16s;
+  margin-bottom:18px;
+}
+.back-btn:hover{color:var(--ember);border-color:var(--ember);box-shadow:0 0 16px rgba(226,59,46,0.3);}
 
-    .card-icon {
-      width: 36px;
-      height: 36px;
-      border-radius: 8px;
-      background: var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
-      flex-shrink: 0;
-    }
+/* the hero image that "moves to the middle" */
+.hero-wrap{text-align:center;margin:6px 0 18px;}
+.hero-img{
+  width:160px;height:160px;
+  object-fit:cover;
+  border:4px solid var(--gold);
+  box-shadow:0 0 0 3px var(--black),0 0 30px rgba(226,59,46,0.45);
+  animation:heroDrop 0.55s cubic-bezier(.2,.8,.2,1) both;
+  filter:contrast(1.05) saturate(0.92);
+}
+.hero-img.contain{object-fit:contain;background:#0a0608;border-color:var(--gold);}
+@keyframes heroDrop{
+  from{opacity:0;transform:translateY(-40px) scale(0.55);}
+  to{opacity:1;transform:none;}
+}
 
-    .card-status {
-      font-size: 10px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      padding: 3px 8px;
-      border-radius: 3px;
-      font-weight: 500;
-    }
+.detail-title{
+  font-family:'Press Start 2P',monospace;
+  font-size:clamp(13px,3.6vw,18px);
+  color:var(--bone);
+  text-align:center;
+  text-shadow:2px 2px 0 #2a0606,0 0 16px rgba(226,59,46,0.35);
+  margin-bottom:6px;
+}
+.detail-sub{
+  text-align:center;
+  color:var(--ember-glow);
+  font-size:18px;
+  margin-bottom:18px;
+  letter-spacing:1px;
+}
 
-    .status-live { background: #1a2e1a; color: #5ecf5e; border: 1px solid #2a4a2a; }
-    .status-wip  { background: #2a2010; color: var(--accent); border: 1px solid #3a3010; }
-    .status-soon { background: #1a1a2e; color: var(--accent2); border: 1px solid #2a2a4a; }
+.scroll{
+  border-top:2px solid var(--line);
+  border-bottom:2px solid var(--line);
+  padding:16px 4px;
+  margin-bottom:18px;
+}
+.scroll p{margin-bottom:12px;color:var(--bone);font-size:20px;}
+.scroll p:last-child{margin-bottom:0;}
+.scroll strong{color:var(--ember-glow);font-weight:400;}
 
-    .card-name {
-      font-family: 'Syne', sans-serif;
-      font-size: 17px;
-      font-weight: 700;
-      color: var(--text);
-      line-height: 1.2;
-    }
+/* stat rows for the profile (RPG style) */
+.stats{display:flex;flex-direction:column;gap:8px;margin:14px 0 4px;}
+.stat{display:flex;align-items:center;gap:12px;}
+.stat .k{
+  font-family:'Press Start 2P',monospace;font-size:8px;color:var(--bone-dim);
+  width:96px;flex-shrink:0;letter-spacing:1px;
+}
+.stat .bar{flex:1;height:12px;background:#1a0c0e;border:1px solid var(--line);position:relative;overflow:hidden;}
+.stat .bar i{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,var(--blood),var(--ember));box-shadow:0 0 8px rgba(226,59,46,0.6);}
+.stat .v{font-size:16px;color:var(--bone);width:42px;text-align:right;}
 
-    .card-desc {
-      font-size: 13px;
-      color: var(--muted);
-      line-height: 1.6;
-      flex: 1;
-    }
+/* gallery — ADD PHOTO here */
+.gallery{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(96px,1fr));
+  gap:8px;
+  margin:14px 0 4px;
+}
+.gallery img{
+  width:100%;aspect-ratio:1;object-fit:cover;
+  border:2px solid var(--line);
+  filter:contrast(1.05) saturate(0.9) brightness(0.95);
+  transition:all 0.16s;cursor:pointer;
+}
+.gallery img:hover{border-color:var(--gold);filter:none;transform:scale(1.04);box-shadow:0 0 16px rgba(226,59,46,0.35);}
 
-    .card-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
+/* action buttons */
+.actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;}
+.gbtn{
+  font-family:'Press Start 2P',monospace;
+  font-size:9px;
+  letter-spacing:1px;
+  padding:13px 16px;
+  text-decoration:none;
+  border:2px solid;
+  cursor:pointer;
+  transition:all 0.16s;
+  display:inline-flex;align-items:center;gap:8px;
+}
+.gbtn-primary{background:var(--blood);color:var(--bone);border-color:var(--ember);}
+.gbtn-primary:hover{background:var(--blood-2);box-shadow:0 0 22px rgba(226,59,46,0.55);transform:translateY(-2px);}
+.gbtn-ghost{background:rgba(0,0,0,0.4);color:var(--bone-dim);border-color:var(--line);}
+.gbtn-ghost:hover{color:var(--bone);border-color:var(--gold);box-shadow:0 0 16px rgba(201,162,63,0.3);transform:translateY(-2px);}
 
-    .tag {
-      font-size: 10px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      padding: 3px 8px;
-      border: 1px solid var(--border);
-      border-radius: 3px;
-      color: var(--muted);
-    }
+.tags{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:16px;}
+.tag{
+  font-family:'Press Start 2P',monospace;font-size:7px;letter-spacing:1px;
+  padding:5px 8px;border:1px solid var(--line);color:var(--bone-dim);
+}
 
-    .card-actions {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      padding-top: 8px;
-      border-top: 1px solid var(--border);
-    }
+/* footer / sigil links */
+.runes{
+  display:flex;justify-content:center;gap:22px;margin-top:22px;
+  padding-top:16px;border-top:2px solid var(--line);
+}
+.runes a{
+  font-family:'Press Start 2P',monospace;font-size:9px;
+  color:var(--bone-dim);text-decoration:none;letter-spacing:1px;transition:all 0.16s;
+}
+.runes a:hover{color:var(--ember);text-shadow:0 0 10px rgba(226,59,46,0.6);}
 
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-family: 'DM Mono', monospace;
-      font-size: 11px;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      padding: 7px 14px;
-      border-radius: 4px;
-      border: 1px solid transparent;
-      cursor: pointer;
-      text-decoration: none;
-      transition: all 0.12s;
-      white-space: nowrap;
-    }
+.foot{text-align:center;margin-top:14px;color:var(--bone-dim);font-size:15px;letter-spacing:1px;}
 
-    .btn-primary { background: var(--accent); color: #0e0e0e; font-weight: 500; }
-    .btn-primary:hover { background: #e0b850; }
+/* press start blink hint on first load */
+.hint{
+  text-align:center;font-family:'Press Start 2P',monospace;font-size:8px;
+  color:var(--ember);margin-top:14px;letter-spacing:1px;
+  animation:blink 1.3s steps(2,start) infinite;
+}
+@keyframes blink{50%{opacity:0.25;}}
 
-    .btn-ghost { border-color: var(--border); color: var(--muted); }
-    .btn-ghost:hover { border-color: #3a3a3a; color: var(--text); }
-
-    .btn-store { border-color: #2a3a5a; color: #6a9adf; }
-    .btn-store:hover { border-color: #3a4a6a; color: #8abaff; }
-
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 32px 0;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 16px;
-    }
-
-    .footer-left { font-size: 12px; color: var(--muted); }
-
-    .footer-links { display: flex; gap: 20px; }
-
-    .footer-links a {
-      font-size: 11px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--muted);
-      text-decoration: none;
-      transition: color 0.12s;
-    }
-
-    .footer-links a:hover { color: var(--text); }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(16px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    header { animation: fadeUp 0.5s ease both; }
-    .card  { animation: fadeUp 0.5s ease both; animation-delay: 0.08s; }
-
-    @media (max-width: 520px) {
-      .projects { grid-template-columns: 1fr; }
-      header { padding: 56px 0 40px; }
-    }
-  </style>
+@media (max-width:560px){
+  body{font-size:18px;}
+  .portrait{width:66px;height:66px;}
+  .profile-strip{gap:12px;padding:10px;}
+  .menu-item{padding:11px 12px;gap:11px;}
+  .menu-item .ico{width:40px;height:40px;}
+  .frame{padding:18px 16px 22px;}
+  .runes{gap:14px;}
+}
+</style>
 </head>
 <body>
-<div class="wrap">
 
-  <header>
-    <p class="header-label">// adhyan kalsotra</p>
-    <h1>Projects &<br><span>Releases</span></h1>
-    <p class="header-sub">Tools, Apps, and Experiments. Download or explore, currently all are free.</p>
-  </header>
+<canvas id="scene" width="320" height="180" aria-hidden="true"></canvas>
+<div id="atmosphere" aria-hidden="true"></div>
+<div id="flash" aria-hidden="true"></div>
 
-  <div class="section-header">
-    <h2>All Projects</h2>
+<div class="stage">
+  <div class="panel">
+  <div class="frame">
+    <span class="rivet-bl"></span><span class="rivet-br"></span>
+
+    <!-- ============ MENU VIEW ============ -->
+    <section class="view active" id="view-menu">
+      <div class="crest">
+        <div class="sigil">✦ A.K ✦</div>
+        <h1 class="title">THE KEEP</h1>
+        <p class="subtitle">~ projects forged in the storm ~</p>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- PROFILE STRIP — opens the full profile -->
+      <div class="profile-strip" onclick="go('profile')" role="button" tabindex="0"
+           onkeydown="if(event.key==='Enter')go('profile')">
+        <img class="portrait" src="images/profile.jpg" alt="Adhyan Kalsotra" />
+        <div>
+          <!-- EDIT TAGLINE: change the name & line below -->
+          <div class="pname">Adhyan Kalsotra</div>
+          <div class="ptag">Indie dev · creative technologist</div>
+          <div class="enter">▶ press to enter the chronicle</div>
+        </div>
+      </div>
+
+      <div class="menu-label">— CHOOSE YOUR QUEST —</div>
+
+      <div class="menu-list">
+        <button class="menu-item" onclick="go('adycus')">
+          <img class="ico" src="images/adycus.png" alt="Adycus" />
+          <div>
+            <div class="mtitle">Adycus</div>
+            <div class="mdesc">Chrome productivity extension</div>
+          </div>
+          <span class="badge badge-live">LIVE</span>
+          <span class="arrow">►</span>
+        </button>
+
+        <button class="menu-item" onclick="go('vinylwave')">
+          <img class="ico" src="images/vinylwave.png" alt="Vinyl Wave" />
+          <div>
+            <div class="mtitle">Vinyl Wave</div>
+            <div class="mdesc">Desktop music player</div>
+          </div>
+          <span class="badge badge-live">LIVE</span>
+          <span class="arrow">►</span>
+        </button>
+      </div>
+
+      <div class="runes">
+        <a href="https://www.instagram.com/addy_kali/" target="_blank" rel="noopener">INSTAGRAM</a>
+        <a href="https://github.com/Addy-ka" target="_blank" rel="noopener">GITHUB</a>
+        <a href="https://www.behance.net/adhyankalsotra" target="_blank" rel="noopener">BEHANCE</a>
+      </div>
+      <p class="hint">▾ select an option ▾</p>
+    </section>
+
+    <!-- ============ PROFILE VIEW ============ -->
+    <section class="view" id="view-profile">
+      <button class="back-btn" onclick="go('menu')">◄ BACK TO THE KEEP</button>
+
+      <div class="hero-wrap">
+        <img class="hero-img" src="images/profile.jpg" alt="Adhyan Kalsotra" />
+      </div>
+      <h2 class="detail-title">ADHYAN KALSOTRA</h2>
+      <p class="detail-sub">Lvl 18 · Creative Director / Vibe-coder</p>
+
+      <!-- EDIT BIO: write whatever you want here. Each <p> is a paragraph. -->
+      <div class="scroll">
+        <p>Greetings, traveller. I'm <strong>Adhyan</strong> — an 18-year-old indie developer and creative technologist from India. I build software that's meant to <strong>feel</strong> like something, not just work.</p>
+        <p>I move between code, electronics, game design, music and writing. My favourite projects lean <strong>gothic, cinematic and a little theatrical</strong> — like this very page.</p>
+        <p>I direct the vision and the product; I make things people actually want to use. This little keep is where I keep what I've shipped.</p>
+      </div>
+      <!-- END EDIT BIO -->
+
+      <div class="stats">
+        <div class="stat"><span class="k">DESIGN</span><span class="bar"><i style="width:92%"></i></span><span class="v">92</span></div>
+        <div class="stat"><span class="k">SHIPPING</span><span class="bar"><i style="width:88%"></i></span><span class="v">88</span></div>
+        <div class="stat"><span class="k">CHAOS</span><span class="bar"><i style="width:97%"></i></span><span class="v">97</span></div>
+      </div>
+
+      <div class="menu-label">— THE GALLERY —</div>
+      <!-- ADD PHOTO: drop a new image in /images and copy a line below.
+           Keep them square-ish for the cleanest look. -->
+      <div class="gallery">
+        <img src="images/profile.jpg" alt="Adhyan" onclick="window.open(this.src,'_blank')" />
+        <!-- <img src="images/photo2.jpg" alt="" onclick="window.open(this.src,'_blank')" /> -->
+        <!-- <img src="images/photo3.jpg" alt="" onclick="window.open(this.src,'_blank')" /> -->
+      </div>
+      <!-- END ADD PHOTO -->
+
+      <div class="runes">
+        <a href="https://www.instagram.com/addy_kali/" target="_blank" rel="noopener">INSTAGRAM</a>
+        <a href="https://github.com/Addy-ka" target="_blank" rel="noopener">GITHUB</a>
+        <a href="https://www.behance.net/adhyankalsotra" target="_blank" rel="noopener">BEHANCE</a>
+      </div>
+    </section>
+
+    <!-- ============ ADYCUS VIEW ============ -->
+    <section class="view" id="view-adycus">
+      <button class="back-btn" onclick="go('menu')">◄ BACK TO THE KEEP</button>
+
+      <div class="hero-wrap">
+        <img class="hero-img contain" src="images/adycus.png" alt="Adycus" />
+      </div>
+      <h2 class="detail-title">ADYCUS</h2>
+      <p class="detail-sub">Chrome Extension · v1.1.1 · Live</p>
+
+      <div class="tags">
+        <span class="tag">BROWSER EXTENSION</span>
+        <span class="tag">HTML · CSS · JS</span>
+        <span class="tag">CHROMIUM</span>
+      </div>
+
+      <div class="scroll">
+        <p>A Chrome productivity extension that keeps everything in one place — a <strong>Kanban board</strong>, <strong>Pomodoro / Sprint timer</strong>, activity tracking, a new-tab widget and automatic <strong>Shorts & Reels blocking</strong>.</p>
+        <p>100% local. No accounts, no tracking — wrapped in a <strong>medieval fantasy theme</strong> with a cinematic dragon fight on blocked pages.</p>
+      </div>
+
+      <div class="actions">
+        <a class="gbtn gbtn-primary" href="https://chromewebstore.google.com/detail/adycus/nbfpikbckfjnoadcchfabkeaegjkkmjm?authuser=0&hl=en-GB" target="_blank" rel="noopener">⬇ ADD TO CHROME</a>
+        <a class="gbtn gbtn-ghost" href="https://www.behance.net/gallery/248746209/Adycus-(Update)" target="_blank" rel="noopener">↗ CASE STUDY</a>
+      </div>
+    </section>
+
+    <!-- ============ VINYL WAVE VIEW ============ -->
+    <section class="view" id="view-vinylwave">
+      <button class="back-btn" onclick="go('menu')">◄ BACK TO THE KEEP</button>
+
+      <div class="hero-wrap">
+        <img class="hero-img contain" src="images/vinylwave.png" alt="Vinyl Wave" />
+      </div>
+      <h2 class="detail-title">VINYL WAVE</h2>
+      <p class="detail-sub">Desktop App · C# / WPF · Live</p>
+
+      <div class="tags">
+        <span class="tag">DESKTOP APP</span>
+        <span class="tag">C# · WPF</span>
+        <span class="tag">WINDOWS</span>
+      </div>
+
+      <div class="scroll">
+        <p>Some music deserves more than a progress bar. <strong>Vinyl Wave</strong> is a desktop music player built around the ritual of listening — a spinning turntable, drag-to-seek tonearm, rich themes and an interface that feels as good as it sounds.</p>
+        <p>Seven themes, crossfade, queue, mini-mode and SMTC integration. Made to be <strong>held onto</strong>.</p>
+      </div>
+
+      <div class="actions">
+        <a class="gbtn gbtn-primary" href="https://drive.google.com/file/d/1VLiRk3XJ7WVxPKLVVczGvzP7ih5GFBoZ/view?usp=sharing" target="_blank" rel="noopener">⬇ FREE DOWNLOAD</a>
+        <a class="gbtn gbtn-ghost" href="https://www.behance.net/gallery/247690629/Vinyl-Wave" target="_blank" rel="noopener">↗ CASE STUDY</a>
+      </div>
+    </section>
+
+    <p class="foot">© 2026 Adhyan Kalsotra · built in the storm</p>
   </div>
-
-  <div class="projects">
-
-    <!-- ═══════════════════════════════════════════════════
-         TO ADD A NEW PROJECT:
-         Copy this entire card block, paste it right below,
-         and update the emoji, status, name, desc, tags, links.
-    ════════════════════════════════════════════════════ -->
-<div class="card">
-      <div class="card-top">
-        <div class="card-icon">A</div>
-        <span class="card-status status-live">Live</progress></progress></span>
-      </div>
-      <div class="card-name">Adycus</div>
-      <div class="card-desc">
-       A Chrome productivity extension that keeps everything in one place. Kanban task board, multi-day calendar, Pomodoro timer, activity tracking, and automatic Shorts and Reels blocking, all 100% local, no accounts, no tracking. Currently and Update is dropping.
-      </div>
-      <div class="card-tags">
-        <span class="tag">Browser extension</span>
-        <span class="tag">HTML / CSS/ JAVASCRIPT</span>
-        <span class="tag">Chromium</span>
-      </div>
-      <div class="card-actions">
-        <a class="btn btn-ghost" href="https://www.behance.net/gallery/248746209/Adycus-(Update)" target="_blank">↗ Case Study</a>
-        <a class="btn btn-primary" href="https://chromewebstore.google.com/detail/adycus/nbfpikbckfjnoadcchfabkeaegjkkmjm?authuser=0&hl=en-GB" target="_blank">↗ Add to Chrome for free</a>
-      </div>
-    </div>
-  
-   </div>
-    <div class="card">
-      <div class="card-top">
-        <div class="card-icon">🎵</div>
-        <span class="card-status status-live">Live</span>
-      </div>
-      <div class="card-name">Vinyl Wave</div>
-      <div class="card-desc">
-       Some music deserves more than a progress bar. Vinyl Wave is a desktop music player designed around the ritual of listening — with a spinning turntable, rich themes, and an interface that feels as good as it sounds.
-      </div>
-      <div class="card-tags">
-        <span class="tag">Desktop App</span>
-        <span class="tag">C# / WPF</span>
-        <span class="tag">Windows</span>
-      </div>
-      <div class="card-actions">
-        <a class="btn btn-ghost" href="https://www.behance.net/gallery/247690629/Vinyl-Wave" target="_blank">↗ Case Study</a>
-        <a class="btn btn-primary"   href="https://drive.google.com/file/d/1VLiRk3XJ7WVxPKLVVczGvzP7ih5GFBoZ/view?usp=sharing" target="_blank">↓ Free Download</a>
-      </div>
-    </div>
-
   </div>
-  <footer>
-    <span class="footer-left">© 2026 Adhyan Kalsotra</span>
-    <div class="footer-links">
-      <a href="https://www.instagram.com/addy_kali/" target="_blank">Instagram</a>
-      <a href="https://github.com/Addy-ka" target="_blank">GitHub</a>
-      <a href="https://www.behance.net/adhyankalsotra" target="_blank">Behance</a>
-    </div>
-  </footer>
-
 </div>
+
+<script>
+/* ============================================================
+   VIEW NAVIGATION  (menu / profile / adycus / vinylwave)
+   Picture animates into the middle on each detail view.
+   ============================================================ */
+function go(name){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  var el = document.getElementById('view-'+name);
+  el.classList.add('active');
+  // re-trigger the hero image "drop to middle" animation
+  var hero = el.querySelector('.hero-img');
+  if(hero){ hero.style.animation='none'; void hero.offsetWidth; hero.style.animation=''; }
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ============================================================
+   THE LIVING SCENE v2 — detailed gothic pixel castle
+   Castle pinned to the LEFT on a grassy bank; a winding river
+   flows out of its gate across the foreground. Swaying grass,
+   red flowers, tombstones, a dead tree, drifting embers, bats,
+   wind-blown rain, branched lightning that shatters the keep's
+   crenellations — torch-lit skeletons rebuild it — forever.
+   Adaptive low-res buffer (window/PIXEL) = crunchy pixels that
+   fit any screen, so the castle is never cropped away.
+   ============================================================ */
+(function(){
+  var canvas=document.getElementById('scene');
+  var ctx=canvas.getContext('2d');
+  var PIXEL=4;
+  var W,H,groundY,C={};
+
+  function px(x,y,w,h,c){ if(w<=0||h<=0)return; ctx.fillStyle=c; ctx.fillRect(x|0,y|0,Math.ceil(w),Math.ceil(h)); }
+  function circle(cx,cy,r){ for(var yy=-r;yy<=r;yy++){ var ww=Math.floor(Math.sqrt(Math.max(0,r*r-yy*yy))); ctx.fillRect((cx-ww)|0,(cy+yy)|0,ww*2,1);} }
+
+  /* deterministic brick texture (stable, no flicker) */
+  function brick(x,y,w,h,base,mortar,hi,lo){
+    if(h<=0) return;
+    px(x,y,w,h,base);
+    var row=0;
+    for(var ry=y; ry<y+h; ry+=4,row++){
+      px(x,ry,w,1,mortar);
+      var off=(row&1)?2:0;
+      for(var rx=x+off; rx<x+w; rx+=4){
+        var hh=Math.min(4,(y+h)-ry);
+        px(rx,ry,1,hh,mortar);
+        var s=((rx*13+ry*29)>>2)&7;
+        if(s===0) px(rx+1,ry+1,2,Math.min(2,hh-1),hi);
+        else if(s===4) px(rx+1,ry+1,2,Math.min(2,hh-1),lo);
+      }
+    }
+  }
+  /* conical roof, apex at top widening downward */
+  function roof(cx,topY,baseW,h,colA,colB,colEdge){
+    for(var i=0;i<h;i++){
+      var y=topY+i, w=Math.round(baseW*(i+1)/h), x=cx-(w>>1);
+      px(x,y,w,1,colA);
+      px(x,y,Math.max(1,w>>2),1,colB);
+      px(x+w-1,y,1,1,colEdge);
+    }
+  }
+  /* arched lit window */
+  function win(x,y,w,h,lit){
+    var c=lit?'#ff7a33':'#5a1d0c';
+    px(x,y+1,w,h-1,'#0c0608');
+    px(x+1,y+1,w-2,h-2,c);
+    px(x+1,y,w-2,1,'#0c0608');
+  }
+
+  /* ---- layout / responsive ---- */
+  var clouds=[],drops=[],bats=[],embers=[];
+  function layout(){
+    W=canvas.width=Math.max(150,Math.ceil(window.innerWidth/PIXEL));
+    H=canvas.height=Math.max(110,Math.ceil(window.innerHeight/PIXEL));
+    ctx.imageSmoothingEnabled=false;
+    groundY=Math.round(H*0.78);
+    var bx=Math.round(W*0.05)+5;
+    C.bx=bx; C.baseY=groundY;
+    C.rtX=bx;       C.rtW=16; C.rtTopY=Math.max(8,groundY-78);   // tall flag tower (left)
+    C.keepX=bx+18;  C.keepW=30; C.keepTopY=Math.max(14,groundY-58); // central keep (destructible top)
+    C.ltX=bx+46;    C.ltW=15; C.ltTopY=Math.max(18,groundY-48);  // shorter tower (right)
+    C.gx=C.keepX+8; C.gw=14;                                     // gate
+    buildTop();
+    initSky(); initRain(); initBats(); initEmbers();
+  }
+  function initSky(){ clouds=[]; var n=Math.max(4,Math.round(W/55));
+    for(var i=0;i<n;i++) clouds.push({x:Math.random()*W,y:3+Math.random()*(H*0.20),w:20+Math.random()*46,sp:0.04+Math.random()*0.10}); }
+  function initRain(){ drops=[]; var n=Math.max(120,Math.round(W*0.9));
+    for(var i=0;i<n;i++) drops.push({x:Math.random()*W,y:Math.random()*H,l:2+Math.random()*4,s:3+Math.random()*3}); }
+  function initBats(){ bats=[]; for(var i=0;i<4;i++) bats.push({x:Math.random()*W,y:6+Math.random()*(H*0.3),sp:0.18+Math.random()*0.25,ph:Math.random()*6,amp:3+Math.random()*4}); }
+  function initEmbers(){ embers=[]; for(var i=0;i<24;i++) embers.push({x:Math.random()*W,y:Math.random()*H,s:0.08+Math.random()*0.18,fl:Math.random()*6}); }
+
+  /* ---- destructible keep top ---- */
+  var topParts=[];
+  function buildTop(){
+    topParts=[];
+    var n=6,mw=4,gap=1;
+    for(var i=0;i<n;i++) topParts.push({x:C.keepX+i*(mw+gap), y:C.keepTopY-4, w:mw, h:4, built:true});
+    topParts.push({x:C.keepX+9, y:C.keepTopY-10, w:12, h:6, built:true, cap:true});
+  }
+
+  /* ---- storm state machine ---- */
+  var STATE='intact', tState=0;
+  var INTACT_MS=3800, STRIKE_MS=850, REPAIR_MS=4400;
+  var bolt=null, boltLife=0, rubble=[], towerGlow=0, flickerSky=0;
+
+  function makeBolt(tx,ty){
+    var sx=tx+(Math.random()*30-15), sy=2, pts=[[sx,sy]], x=sx,y=sy, steps=10;
+    for(var i=1;i<=steps;i++){ y=sy+(ty-sy)*(i/steps); x+=(Math.random()*14-7); x+=(tx-x)*0.26; pts.push([x,y]); }
+    pts.push([tx,ty]);
+    var branch=null, bi=4+((Math.random()*3)|0);
+    if(pts[bi]){ var p=pts[bi]; branch=[[p[0],p[1]]]; var b1=p[0],b2=p[1];
+      for(var j=0;j<4;j++){ b1+=(Math.random()*12-3); b2+=4+Math.random()*4; branch.push([b1,b2]); } }
+    return {main:pts,branch:branch};
+  }
+  function strike(){
+    var tx=C.keepX+(C.keepW>>1), ty=C.keepTopY-8;
+    bolt=makeBolt(tx,ty); boltLife=1; towerGlow=1;
+    topParts.forEach(function(p){p.built=false;});
+    rubble=[];
+    for(var i=0;i<16;i++) rubble.push({x:tx-8+Math.random()*16,y:ty+Math.random()*10,vx:(Math.random()*2-1)*0.8,vy:-Math.random()*1.3,life:1});
+    var f=document.getElementById('flash'); f.classList.remove('hit'); void f.offsetWidth; f.classList.add('hit');
+  }
+  function strokePath(pts){ ctx.beginPath(); ctx.moveTo(pts[0][0],pts[0][1]); for(var i=1;i<pts.length;i++) ctx.lineTo(pts[i][0],pts[i][1]); ctx.stroke(); }
+  function drawBolt(){
+    if(!bolt) return;
+    ctx.lineCap='round';
+    var sets=[['rgba(226,59,46,',0.55,4],['rgba(255,120,90,',0.8,2],['rgba(255,245,240,',1,1]];
+    for(var s=0;s<sets.length;s++){ ctx.strokeStyle=sets[s][0]+(sets[s][1]*boltLife)+')'; ctx.lineWidth=sets[s][2];
+      strokePath(bolt.main); if(bolt.branch) strokePath(bolt.branch); }
+    boltLife-=0.08; if(boltLife<=0) bolt=null;
+  }
+
+  /* ---- skeleton (center x = bx, feet at by) ---- */
+  function skeleton(bx,by,bob,carrying){
+    var b='#f2ecd6', d='#bdb29a', dk='#241016';
+    by+=Math.round(Math.sin(bob)*1.4);
+    var g=ctx.createRadialGradient(bx,by-9,1,bx,by-9,16);
+    g.addColorStop(0,'rgba(255,150,70,0.42)'); g.addColorStop(1,'rgba(255,150,70,0)');
+    ctx.fillStyle=g; ctx.fillRect(bx-16,by-25,32,32);
+    if(carrying){ px(bx-3,by-22,7,4,'#3a2026'); px(bx-3,by-22,7,1,'#5e3340'); }
+    px(bx-3,by-18,6,6,b);
+    px(bx-2,by-15,1,2,dk); px(bx+1,by-15,1,2,dk);
+    px(bx-1,by-12,3,8,b); px(bx-1,by-10,3,1,dk); px(bx-1,by-7,3,1,dk);
+    px(bx-4,by-11,1,6,d); px(bx+3,by-11,1,6,d);
+    px(bx-2,by-4,2,5,b); px(bx+1,by-4,2,5,b);
+  }
+
+  /* ---- sky, moon, distant hills ---- */
+  function drawSky(t){
+    var g=ctx.createLinearGradient(0,0,0,groundY+12);
+    g.addColorStop(0,'#0a0510'); g.addColorStop(0.5,'#170a14'); g.addColorStop(1,'#241019');
+    ctx.fillStyle=g; ctx.fillRect(0,0,W,groundY+12);
+    if(flickerSky>0){ ctx.fillStyle='rgba(130,46,52,'+(flickerSky*0.22)+')'; ctx.fillRect(0,0,W,groundY); flickerSky-=0.05; }
+    if(Math.random()<0.005 && STATE==='intact') flickerSky=0.6;
+    // blood moon (upper-right, high so it clears the menu)
+    var mx=Math.round(W*0.80), my=Math.round(H*0.15), mr=Math.max(5,Math.round(Math.min(W,H)*0.06));
+    var mg=ctx.createRadialGradient(mx,my,1,mx,my,mr*2.4);
+    mg.addColorStop(0,'rgba(190,70,60,0.45)'); mg.addColorStop(1,'rgba(190,70,60,0)');
+    ctx.fillStyle=mg; ctx.fillRect(mx-mr*3,my-mr*3,mr*6,mr*6);
+    ctx.fillStyle='#7e2a26'; circle(mx,my,mr);
+    ctx.fillStyle='#692420'; circle(mx-(mr*0.3|0),my-(mr*0.2|0),Math.max(1,mr*0.35|0));
+    // distant jagged hills behind the castle
+    for(var hx=0;hx<W;hx+=6){ var hh=2+((hx*3)%5); px(hx,groundY-5-hh,6,5+hh,'#160d14'); }
+  }
+  function drawClouds(){
+    for(var i=0;i<clouds.length;i++){ var c=clouds[i]; c.x+=c.sp; if(c.x-c.w>W)c.x=-c.w;
+      var x=Math.round(c.x),y=Math.round(c.y),w=Math.round(c.w);
+      px(x,y+3,w,5,'#180f17'); px(x+5,y,w-10,5,'#180f17'); px(x+(w*0.3|0),y-2,(w*0.4|0),4,'#180f17');
+      px(x+5,y,w-10,1,'#281829'); }
+  }
+  function drawBats(t){
+    for(var i=0;i<bats.length;i++){ var b=bats[i]; b.x+=b.sp; b.ph+=0.25; if(b.x>W+6)b.x=-6;
+      var y=Math.round(b.y+Math.sin(t*0.002+i)*b.amp), x=Math.round(b.x), up=Math.sin(b.ph)>0;
+      px(x,y,1,1,'#0b0710');
+      if(up){ px(x-2,y-1,2,1,'#0b0710'); px(x+1,y-1,2,1,'#0b0710'); }
+      else  { px(x-2,y,2,1,'#0b0710');   px(x+1,y,2,1,'#0b0710'); } }
+  }
+  function drawEmbers(t){
+    for(var i=0;i<embers.length;i++){ var e=embers[i]; e.y-=e.s; e.x+=Math.sin(t*0.001+e.fl)*0.12; e.fl+=0.05;
+      if(e.y<0){ e.y=H; e.x=Math.random()*W; }
+      var a=(0.35+Math.sin(e.fl)*0.3).toFixed(2), gr=80+((Math.sin(e.fl)+1)*40|0);
+      px(Math.round(e.x),Math.round(e.y),1,1,'rgba(255,'+gr+',40,'+a+')'); }
+  }
+
+  /* ---- ground, grass, graveyard ---- */
+  function drawGround(t){
+    px(0,groundY,W,H-groundY,'#15110a');
+    px(0,groundY,W,2,'#221a0e');
+    px(0,groundY-2,W,2,'#1e2d0d');
+    px(0,groundY-2,W,1,'#2e441a');
+    for(var gx=0; gx<W; gx+=2){
+      var sway=Math.round(Math.sin(t*0.002+gx*0.6)*1), hgt=2+((gx*5)%3);
+      px(gx+sway,groundY-2-hgt,1,hgt, ((gx>>1)&1)?'#284012':'#223610');
+      if((gx%16)===0) px(gx+sway,groundY-3-hgt,1,2,'#345320');
+      if((gx*5%67)===0) px(gx+sway,groundY-3-hgt,1,1,'#c23030');
+    }
+  }
+  function tomb(x,y){ px(x,y-6,4,6,'#34343a'); px(x+1,y-7,2,1,'#34343a'); px(x,y-6,1,6,'#26262c'); px(x+3,y-6,1,6,'#26262c'); px(x+1,y-4,2,1,'#22222a'); }
+  function drawGraveyard(){
+    var tx=Math.round(W*0.90), ty=groundY;
+    px(tx,ty-24,2,24,'#1c140e');
+    px(tx-6,ty-19,6,1,'#1c140e'); px(tx-8,ty-23,3,5,'#1c140e');
+    px(tx+2,ty-17,7,1,'#1c140e'); px(tx+8,ty-22,2,6,'#1c140e'); px(tx-2,ty-14,4,1,'#1c140e');
+    tomb(Math.round(W*0.83),groundY); tomb(Math.round(W*0.96),groundY-1);
+  }
+
+  /* ---- castle ---- */
+  function drawCastle(t){
+    var baseY=C.baseY, sb='#2e2026', mo='#1b1217', hi='#412e35', lo='#211519';
+    // foundation
+    px(C.rtX-2,baseY-2,(C.ltX+C.ltW+2)-(C.rtX-2),8,'#1a130d');
+    // back glow
+    var g=ctx.createRadialGradient(C.keepX+15,C.keepTopY+12,4,C.keepX+15,C.keepTopY+12,70);
+    g.addColorStop(0,'rgba(120,16,16,0.15)'); g.addColorStop(1,'rgba(120,16,16,0)');
+    ctx.fillStyle=g; ctx.fillRect(C.rtX-24,C.rtTopY-24,110,120);
+
+    // tall flag tower (left)
+    brick(C.rtX,C.rtTopY,C.rtW,baseY-C.rtTopY,sb,mo,hi,lo);
+    roof(C.rtX+(C.rtW>>1),C.rtTopY-18,C.rtW+3,16,'#5a1414','#7e2020','#380c0c');
+    px(C.rtX+(C.rtW>>1),C.rtTopY-28,1,11,'#6a5a4a');
+    var fl=Math.round(Math.sin(t*0.006)*1);
+    px(C.rtX+(C.rtW>>1)+1,C.rtTopY-28+fl,7,4,'#8a1414'); px(C.rtX+(C.rtW>>1)+1,C.rtTopY-28+fl,7,1,'#b62222');
+    px(C.rtX+(C.rtW>>1)+3,C.rtTopY-27+fl,1,2,'#c9a23f');
+    win(C.rtX+5,C.rtTopY+12,4,7,true); win(C.rtX+5,C.rtTopY+28,4,7,Math.sin(t*0.01)>0);
+
+    // shorter tower (right)
+    brick(C.ltX,C.ltTopY,C.ltW,baseY-C.ltTopY,sb,mo,hi,lo);
+    roof(C.ltX+(C.ltW>>1),C.ltTopY-13,C.ltW+2,12,'#5a1414','#7e2020','#380c0c');
+    win(C.ltX+5,C.ltTopY+10,4,7,Math.sin(t*0.009)>0);
+
+    // central keep
+    brick(C.keepX,C.keepTopY,C.keepW,baseY-C.keepTopY,sb,mo,hi,lo);
+    win(C.keepX+5,C.keepTopY+8,5,7,true);
+    win(C.keepX+19,C.keepTopY+8,5,7,Math.sin(t*0.013)>-0.3);
+    win(C.keepX+12,C.keepTopY+22,6,8,true);
+    // hanging banner
+    px(C.keepX+13,C.keepTopY+4,5,15,'#7a1414'); px(C.keepX+13,C.keepTopY+4,5,1,'#9a2020');
+    px(C.keepX+15,C.keepTopY+9,1,3,'#c9a23f'); px(C.keepX+14,C.keepTopY+19,3,2,'#7a1414');
+    // afterglow at keep top
+    if(towerGlow>0){ var gg=ctx.createRadialGradient(C.keepX+(C.keepW>>1),C.keepTopY-4,1,C.keepX+(C.keepW>>1),C.keepTopY-4,28);
+      gg.addColorStop(0,'rgba(255,120,60,'+(0.55*towerGlow)+')'); gg.addColorStop(0.5,'rgba(226,59,46,'+(0.3*towerGlow)+')'); gg.addColorStop(1,'rgba(226,59,46,0)');
+      ctx.fillStyle=gg; ctx.fillRect(C.keepX-12,C.keepTopY-30,C.keepW+24,40); }
+    // destructible top
+    topParts.forEach(function(p){ if(!p.built) return;
+      if(p.cap) roof(p.x+(p.w>>1),p.y-1,p.w,7,'#4a1010','#6a1a1a','#300a0a');
+      else { px(p.x,p.y,p.w,p.h,sb); px(p.x,p.y,p.w,1,hi); } });
+
+    // front gatehouse wall (unifies the bases)
+    var wY=baseY-16, wX=C.rtX, wW=(C.ltX+C.ltW)-C.rtX;
+    brick(wX,wY,wW,16,sb,mo,hi,lo);
+    for(var cx=wX;cx<wX+wW;cx+=4){ px(cx,wY-3,3,3,sb); px(cx,wY-3,3,1,hi); }
+    // arched gate
+    var gx=C.gx,gw=C.gw;
+    px(gx,baseY-13,gw,13,'#0a0506'); px(gx+1,baseY-14,gw-2,1,'#0a0506'); px(gx+2,baseY-15,gw-4,1,'#0a0506');
+    for(var pb=gx+1;pb<gx+gw-1;pb+=2) px(pb,baseY-12,1,8,'#241016');
+    var gog=ctx.createRadialGradient(gx+gw/2,baseY-3,1,gx+gw/2,baseY-3,13);
+    gog.addColorStop(0,'rgba(255,120,40,0.5)'); gog.addColorStop(1,'rgba(255,120,40,0)');
+    ctx.fillStyle=gog; ctx.fillRect(gx-6,baseY-16,gw+12,18);
+  }
+  function drawRubble(){
+    for(var i=rubble.length-1;i>=0;i--){ var r=rubble[i]; px(r.x,r.y,2,2,'rgba(120,70,60,'+r.life.toFixed(2)+')');
+      r.x+=r.vx; r.y+=r.vy; r.vy+=0.08; r.life-=0.02; if(r.life<=0) rubble.splice(i,1); }
+  }
+
+  /* ---- dynamic river out of the gate ---- */
+  function drawRiver(t){
+    var startX=C.gx-2, span=Math.max(1,(W-startX));
+    for(var x=startX; x<W; x++){
+      var prog=(x-startX)/span;
+      var top=Math.round(groundY+3 + Math.sin(x*0.25+t*0.004)*1 + prog*2);
+      var bottom=Math.round(groundY+7 + prog*(H-groundY-6) + Math.sin(x*0.18+t*0.003)*1);
+      if(bottom<=top) bottom=top+1;
+      var hgt=bottom-top;
+      px(x,top,1,hgt,'#11272d');
+      px(x,top+Math.floor(hgt*0.55),1,Math.ceil(hgt*0.45),'#0c1d22');
+      var flow=x*0.18 - t*0.025;
+      if(Math.sin(flow)>0.55) px(x,top+Math.floor(hgt*0.25),1,1,'#3f757c');
+      if(Math.sin(flow*0.7+1.5)>0.7) px(x,top+Math.floor(hgt*0.60),1,1,'#2c565c');
+      var foam=Math.sin(x*0.5 - t*0.035);
+      if(foam>0.55) px(x,top,1,1,'#bfe2e6');
+      if(foam>0.82) px(x,top-1,1,1,'#dff2f4');
+      if(((x*3 - (t*0.04|0))%29)===0) px(x,top+1+(x%Math.max(1,hgt-1)),1,1,'rgba(180,220,225,0.5)');
+      if(Math.sin(x*0.12 - t*0.006)>0.86) px(x,top+2,1,1,'rgba(160,45,42,0.5)');
+      if(((x*7+(t|0))%180)===0) px(x,top+1+((x*3)%Math.max(1,hgt-1)),1,1,'#eafaff');
+    }
+    for(var i=0;i<8;i++){ var fy=groundY+1+((t*0.06+i*2.5)%8); px(startX-3+(i%4),fy,1,2,'#9fc8cd'); px(startX-3+(i%4),fy,1,1,'#dff2f4'); }
+  }
+  function drawRain(t){
+    var wind=-1 - Math.sin(t*0.0006)*0.8;
+    ctx.strokeStyle='rgba(190,205,225,0.20)'; ctx.lineWidth=1; ctx.beginPath();
+    for(var i=0;i<drops.length;i++){ var d=drops[i]; ctx.moveTo(d.x,d.y); ctx.lineTo(d.x+wind*0.5,d.y+d.l);
+      d.y+=d.s; d.x+=wind*0.4; if(d.y>H){ d.y=-d.l; d.x=Math.random()*(W+40); } if(d.x<-4) d.x=W; }
+    ctx.stroke();
+  }
+
+  /* ---- main loop ---- */
+  var last=performance.now();
+  function loop(now){
+    var dt=now-last; last=now;
+    tState+=dt; if(towerGlow>0) towerGlow=Math.max(0,towerGlow-dt/1400);
+    if(STATE==='intact' && tState>INTACT_MS){ STATE='strike'; tState=0; strike(); }
+    else if(STATE==='strike' && tState>STRIKE_MS){ STATE='repair'; tState=0; }
+    else if(STATE==='repair'){
+      var n=topParts.length, built=Math.floor((tState/REPAIR_MS)*n);
+      for(var k=0;k<n;k++) topParts[k].built=(k<built);
+      if(tState>REPAIR_MS){ topParts.forEach(function(p){p.built=true;}); STATE='intact'; tState=0; }
+    }
+
+    drawSky(now);
+    drawClouds();
+    drawBats(now);
+    drawGround(now);
+    drawGraveyard();
+    drawCastle(now);
+    drawBolt();
+    drawRubble();
+    if(STATE==='repair'){
+      skeleton(C.keepX+5, C.keepTopY, now/120, true);
+      skeleton(C.keepX+C.keepW-5, C.keepTopY, now/120+1.6, false);
+      skeleton(C.keepX+(C.keepW>>1), C.keepTopY-2, now/140+0.8, false);
+    }
+    drawRiver(now);
+    drawEmbers(now);
+    drawRain(now);
+    requestAnimationFrame(loop);
+  }
+
+  layout();
+  window.addEventListener('resize', layout);
+  requestAnimationFrame(loop);
+})();
+
+</script>
 </body>
 </html>
